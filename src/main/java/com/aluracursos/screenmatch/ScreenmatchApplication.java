@@ -2,11 +2,15 @@ package com.aluracursos.screenmatch;
 
 import com.aluracursos.screenmatch.model.DatosEpisodios;
 import com.aluracursos.screenmatch.model.DatosSerie;
+import com.aluracursos.screenmatch.model.DatosTemporadas;
 import com.aluracursos.screenmatch.service.ConsumoAPI;
 import com.aluracursos.screenmatch.service.ConvierteDatos;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootApplication
 public class ScreenmatchApplication implements CommandLineRunner {
@@ -29,6 +33,14 @@ public class ScreenmatchApplication implements CommandLineRunner {
 		var json2 = consumoAPI.obtenerDatos("https://www.omdbapi.com/?t=game+of+thrones&Season=1&Episode=1&apikey=22da5c81");
 		var datos2 = conversor.obtenerDatos(json2, DatosEpisodios.class);
 		System.out.println(datos2);
+
+		List<DatosTemporadas> temporadas = new ArrayList<>();
+		for (int i = 1; i <= datos.totalTemporadas(); i++) {
+			json = consumoAPI.obtenerDatos("https://www.omdbapi.com/?t=game+of+thrones&Season=" + i + "&apikey=22da5c81");
+			var datosTemporadas = conversor.obtenerDatos(json, DatosTemporadas.class);
+			temporadas.add(datosTemporadas);
+		}
+		temporadas.forEach(System.out::println);
 	}
 
 }
